@@ -3,6 +3,46 @@ import './App.css';
 
 function App() {
   const [status, setStatus] = useState("AWAITING_COMMANDS");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [tokenInput, setTokenInput] = useState("");
+  const [error, setError] = useState(false);
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    // Banalne szyfrowanie wizualne w kodzie. Wersja produkcyjna na Githabie
+    // odczyta ten token i odblokuje dostęp.
+    if (tokenInput === "5550455") {
+      setIsAuthenticated(true);
+      setError(false);
+    } else {
+      setError(true);
+      setTokenInput("");
+    }
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="login-container">
+        <div className="login-box">
+          <img src="/logo.jpg" alt="Mission Control" className="login-logo" />
+          <h2>RESTRICTED AREA</h2>
+          <p>ENTER ENCRYPTED TOKEN</p>
+          <form onSubmit={handleLogin}>
+            <input 
+              type="password" 
+              value={tokenInput} 
+              onChange={(e) => setTokenInput(e.target.value)}
+              className={error ? "token-input error-shake" : "token-input"}
+              placeholder="•••••••"
+              autoFocus
+            />
+            <button type="submit" className="login-button">AUTHORIZE</button>
+          </form>
+          {error && <p className="error-text">ACCESS DENIED</p>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="dashboard-container">
