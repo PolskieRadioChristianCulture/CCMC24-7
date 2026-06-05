@@ -33,6 +33,7 @@ function App() {
   const [tokenInput, setTokenInput] = useState("");
   const [error, setError] = useState(false);
   const [activeTab, setActiveTab] = useState("CANVAS");
+  const [showJoshuaBubble, setShowJoshuaBubble] = useState(true);
 
   const [suggestionIndex, setSuggestionIndex] = useState(0);
 
@@ -110,12 +111,24 @@ function App() {
             <div className="canvas-placeholder">
               <p>Trwa inicjowanie głównego płótna operacyjnego...</p>
               
-              <div className="ai-suggestion-bubble">
-                <div className="ai-bubble-header">
-                  <span className="ai-icon">✨</span>
-                  <strong>JOSHUA AI</strong>
+              {showJoshuaBubble && (
+                <div className="ai-suggestion-bubble">
+                  <div className="ai-bubble-header">
+                    <span className="ai-icon">✨</span>
+                    <strong>JOSHUA CC</strong>
+                    <button className="close-bubble-btn" onClick={() => setShowJoshuaBubble(false)}>✕</button>
+                  </div>
+                  <p>{AI_SUGGESTIONS[suggestionIndex]}</p>
+                  <div className="ai-bubble-actions">
+                    <button className="ai-action-btn">Rozwiń temat</button>
+                    <button className="ai-action-btn primary">Wprowadź sugestię</button>
+                  </div>
                 </div>
-                <p>{AI_SUGGESTIONS[suggestionIndex]}</p>
+              )}
+
+              <div className="canvas-hud">
+                <button className="hud-icon-btn">💬</button>
+                <button className="hud-icon-btn active-gold" onClick={() => setShowJoshuaBubble(!showJoshuaBubble)}>✨</button>
               </div>
 
             </div>
