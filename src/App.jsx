@@ -109,7 +109,22 @@ function App() {
           <section className="canvas-section">
             <h2>STRATEGIC CANVAS</h2>
             <div className="canvas-placeholder">
-              <p>Trwa inicjowanie głównego płótna operacyjnego...</p>
+              <div className="communicator-terminal">
+                <div className="terminal-header">
+                  <span>TERMINAL DOWODZENIA (KOMUNIKATOR)</span>
+                  <span className="status-pulse">● ONLINE</span>
+                </div>
+                <div className="terminal-body">
+                  <div className="log-entry system">[SYSTEM] Bezpieczne połączenie nawiązane.</div>
+                  <div className="log-entry system">[SYSTEM] Płótno operacyjne załadowane.</div>
+                  <div className="log-entry ai">[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.</div>
+                </div>
+                <div className="terminal-input-wrapper">
+                  <span className="prompt-symbol">root@mission-control:~#</span>
+                  <input type="text" className="terminal-input" placeholder="Wpisz rozkaz (np. /ping, deploy, skan)..." />
+                  <button className="terminal-send-btn">WYŚLIJ</button>
+                </div>
+              </div>
               
               {showJoshuaBubble && (
                 <div className="ai-suggestion-bubble">

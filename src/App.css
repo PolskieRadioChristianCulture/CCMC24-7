@@ -477,3 +477,118 @@
   30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
   40%, 60% { transform: translate3d(4px, 0, 0); }
 }
+
+/* Canvas and Grid */
+.canvas-placeholder {
+  position: relative;
+  width: 100%;
+  min-height: 60vh;
+  background-color: #0d0d0d;
+  background-image: linear-gradient(rgba(212, 175, 55, 0.05) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(212, 175, 55, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  background-position: center center;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Communicator Terminal */
+.communicator-terminal {
+  width: 100%;
+  max-width: 800px;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid #D4AF37;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(212, 175, 55, 0.1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 10;
+}
+
+.terminal-header {
+  background: #1a1a1a;
+  border-bottom: 1px solid #D4AF37;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #D4AF37;
+  letter-spacing: 2px;
+}
+
+.status-pulse {
+  color: #4CAF50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+.terminal-body {
+  padding: 20px;
+  height: 250px;
+  overflow-y: auto;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  color: #a0a0a0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.log-entry.system { color: #888; }
+.log-entry.ai { color: #D4AF37; font-weight: bold; }
+
+.terminal-input-wrapper {
+  display: flex;
+  background: #111;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  padding: 10px;
+  align-items: center;
+}
+
+.prompt-symbol {
+  color: #4CAF50;
+  font-family: 'Courier New', Courier, monospace;
+  margin-right: 10px;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1rem;
+}
+
+.terminal-input:focus {
+  outline: none;
+}
+
+.terminal-send-btn {
+  background: #D4AF37;
+  color: #000;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.terminal-send-btn:hover {
+  background: #f1c40f;
+}
