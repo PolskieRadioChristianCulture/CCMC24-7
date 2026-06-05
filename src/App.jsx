@@ -38,11 +38,26 @@ function App() {
   const [suggestionIndex, setSuggestionIndex] = useState(0);
 
   const [terminalInput, setTerminalInput] = useState("");
+  const [attachmentData, setAttachmentData] = useState(null);
+  const [attachmentName, setAttachmentName] = useState("");
+
   const [terminalLogs, setTerminalLogs] = useState([
     { type: 'system', text: '[SYSTEM] Bezpieczne połączenie nawiązane.' },
     { type: 'system', text: '[SYSTEM] Płótno operacyjne załadowane.' },
     { type: 'ai', text: '[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.' }
   ]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setAttachmentName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAttachmentData(reader.result); // Base64
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const handleTerminalSubmit = async () => {
     if (!terminalInput.trim()) return;
@@ -53,16 +68,24 @@ function App() {
 
     // Wysyłka komendy przez REST API do darmowej bazy Firestore Dowódcy
     try {
+      const payloadFields = {
+        command: { stringValue: cmd },
+        status: { stringValue: 'pending' },
+        timestamp: { timestampValue: new Date().toISOString() }
+      };
+
+      if (attachmentData) {
+        payloadFields.attachment_base64 = { stringValue: attachmentData };
+        payloadFields.attachment_name = { stringValue: attachmentName };
+        setTerminalLogs(prev => [...prev, { type: 'system', text: `[ZAŁĄCZNIK] Dołączono plik: ${attachmentName}` }]);
+        setAttachmentData(null);
+        setAttachmentName("");
+      }
+
       await fetch('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          fields: {
-            command: { stringValue: cmd },
-            status: { stringValue: 'pending' },
-            timestamp: { timestampValue: new Date().toISOString() }
-          }
-        })
+        body: JSON.stringify({ fields: payloadFields })
       });
       setTerminalLogs(prev => [...prev, { type: 'system', text: `[WYSŁANO] Oczekuję na Wektor 1...` }]);
     } catch (e) {
@@ -154,10 +177,16 @@ function App() {
                 </div>
                 <div className="terminal-input-wrapper">
                   <span className="prompt-symbol">root@mission-control:~#</span>
+                  
+                  <input type="file" id="file-upload" style={{display: 'none'}} onChange={handleFileChange} />
+                  <label htmlFor="file-upload" className="attachment-btn" title="Dodaj plik" style={{cursor: 'pointer', marginRight: '10px', fontSize: '18px'}}>
+                    📎
+                  </label>
+
                   <input 
                     type="text" 
                     className="terminal-input" 
-                    placeholder="Wpisz rozkaz (np. /ping, deploy, skan)..."
+                    placeholder={attachmentName ? `Wpisz komendę dla pliku ${attachmentName}...` : "Wpisz rozkaz (np. /ping, deploy, skan)..."}
                     value={terminalInput}
                     onChange={(e) => setTerminalInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleTerminalSubmit()}
