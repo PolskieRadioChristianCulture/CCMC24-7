@@ -1,6 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import logo from '../public/logo.jpg';
+
+const AI_SUGGESTIONS = [
+  "Sugestia AI: Połącz projekt #ImChristian z platformą Holistyczny Coaching by zwiększyć retencję o 14%.",
+  "Sugestia AI: Skieruj ruch z TikTok 'Dobrze, że jesteś' prosto na CC Lite.",
+  "Sugestia AI: Agent 'Strateg Wojenny' rekomenduje uruchomienie powiadomień Push w niedzielę o 20:00.",
+  "Sugestia AI: Zbyt mała integracja bazy mailowej pomiędzy Lumina a Radiem CC. Proponuję most danych."
+];
+
+const AGENTS_CLUB = [
+  { id: 1, name: "Strateg Wojenia Ewangelicznego", type: "Super-Agent", desc: "Zarządza taktyką długofalową i powiązaniami projektów." },
+  { id: 2, name: "Inżynier Wirusowości", type: "Taktyk", desc: "Maksymalizuje zasięgi na Tiktoku, FB i Instagramie." },
+  { id: 3, name: "Analityk Psychiki i Bólu", type: "Kognitywista", desc: "Bada potrzeby duchowe społeczeństwa i lęki." },
+  { id: 4, name: "Strażnik Ognia Ducha", type: "Ochroniarz Doktryny", desc: "Dba o wierność prawdzie i radykalizm ewangeliczny." },
+  { id: 5, name: "Główny Archiwista CC", type: "Baza Danych", desc: "Pamięta wszystko, dokumentuje historię i plany." },
+  { id: 6, name: "Audytor i Weryfikator Kodów", type: "QA", desc: "Sprawdza repozytoria, czyści błędy i luki." },
+  { id: 7, name: "Inżynier Backendu", type: "Wektor 1", desc: "Projektuje API, integruje bazy danych, systemy wideo." },
+  { id: 8, name: "Analityk Taktyczny", type: "Taktyk", desc: "Rozwiązuje mikrozadania tu i teraz." },
+  { id: 9, name: "Biznesmen", type: "Finanse", desc: "Zarabianie na infrastrukturę misyjną." },
+  { id: 10, name: "Ewangelizacja", type: "Działacz", desc: "Bezpośrednie komunikaty ewangelizacyjne." },
+  { id: 11, name: "Integrator", type: "System", desc: "Skleja wszystkie klocki ze sobą." },
+  { id: 12, name: "Komunikacja", type: "PR", desc: "Dba o spójny głos i komunikację wizualną." },
+  { id: 13, name: "Multimedia", type: "Media", desc: "Wideo, podcasty, design." },
+  { id: 14, name: "Prawnik", type: "Legal", desc: "Regulaminy, RODO, bezpieczeństwo danych." },
+  { id: 15, name: "Psycholog", type: "Pomoc", desc: "Konsultacje, wsparcie dla społeczności." }
+];
 
 function App() {
   const [status, setStatus] = useState("AWAITING_COMMANDS");
@@ -8,6 +33,17 @@ function App() {
   const [tokenInput, setTokenInput] = useState("");
   const [error, setError] = useState(false);
   const [activeTab, setActiveTab] = useState("CANVAS");
+
+  const [suggestionIndex, setSuggestionIndex] = useState(0);
+
+  useEffect(() => {
+    if (activeTab === 'CANVAS') {
+      const interval = setInterval(() => {
+        setSuggestionIndex(prev => (prev + 1) % AI_SUGGESTIONS.length);
+      }, 10000); // Zmiana sugestii co 10 sekund
+      return () => clearInterval(interval);
+    }
+  }, [activeTab]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -73,6 +109,15 @@ function App() {
             <h2>STRATEGIC CANVAS</h2>
             <div className="canvas-placeholder">
               <p>Trwa inicjowanie głównego płótna operacyjnego...</p>
+              
+              <div className="ai-suggestion-bubble">
+                <div className="ai-bubble-header">
+                  <span className="ai-icon">✨</span>
+                  <strong>JOSHUA AI</strong>
+                </div>
+                <p>{AI_SUGGESTIONS[suggestionIndex]}</p>
+              </div>
+
             </div>
           </section>
         )}
@@ -163,6 +208,21 @@ function App() {
             </div>
           </section>
         )}
+        {activeTab === 'AGENTS' && (
+          <section className="agents-section">
+            <h2>KLUB DOBRYCH DORADCÓW (AGENTS)</h2>
+            <div className="agents-grid">
+              {AGENTS_CLUB.map(agent => (
+                <div className="eco-card agent-card" key={agent.id}>
+                  <h4>{agent.name}</h4>
+                  <span className="agent-type">{agent.type}</span>
+                  <p className="agent-desc">{agent.desc}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
       </main>
     </div>
   );
