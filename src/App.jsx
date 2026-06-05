@@ -33,7 +33,7 @@ function App() {
   const [tokenInput, setTokenInput] = useState("");
   const [error, setError] = useState(false);
   const [activeTab, setActiveTab] = useState("CANVAS");
-  const [showJoshuaBubble, setShowJoshuaBubble] = useState(true);
+  const [showJoshuaBubble, setShowJoshuaBubble] = useState(false);
 
   const [suggestionIndex, setSuggestionIndex] = useState(0);
 
@@ -53,8 +53,8 @@ function App() {
       let lastTime = new Date().toISOString();
       const pollMessages = async () => {
         try {
-          // Używamy obejścia, by nie instalować całego SDK w React - po prostu odpytujemy REST API
-          const res = await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue`);
+          // Używamy obejścia, by nie instalować całego SDK w React - po prostu odpytujemy REST API z użyciem publicznego klucza
+          const res = await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue?key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4`);
           const json = await res.json();
           if (json.documents) {
             const newLogs = [];
@@ -124,7 +124,7 @@ function App() {
         setAttachmentName("");
       }
 
-      await fetch('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue', {
+      await fetch('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue?key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ fields: payloadFields })
@@ -137,7 +137,7 @@ function App() {
 
   const markAsRead = async (logId) => {
     try {
-      await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue/${logId}?updateMask.fieldPaths=read`, {
+      await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue/${logId}?updateMask.fieldPaths=read&key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
