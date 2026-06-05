@@ -47,6 +47,41 @@ function App() {
     { type: 'ai', text: '[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.' }
   ]);
 
+  // Prosty polling API, byś mógł otrzymywać moje wiadomości na żywo w przeglądarce
+  useEffect(() => {
+    if (activeTab === 'CANVAS') {
+      let lastTime = new Date().toISOString();
+      const pollMessages = async () => {
+        try {
+          // Używamy obejścia, by nie instalować całego SDK w React - po prostu odpytujemy REST API
+          const res = await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue`);
+          const json = await res.json();
+          if (json.documents) {
+            const newLogs = [];
+            json.documents.forEach(doc => {
+              const data = doc.fields;
+              const timestamp = data.timestamp?.timestampValue || "";
+              const sender = data.sender?.stringValue || "user";
+              const text = data.command?.stringValue || "";
+              
+              if (sender === "joshua" && timestamp > lastTime) {
+                newLogs.push({ type: 'ai', text: `[JOSHUA CC] ${text}` });
+                lastTime = timestamp;
+              }
+            });
+            if (newLogs.length > 0) {
+              setTerminalLogs(prev => [...prev, ...newLogs]);
+            }
+          }
+        } catch (e) {
+          // ignoruj błędy sieciowe w tle
+        }
+      };
+      const intervalId = setInterval(pollMessages, 3000);
+      return () => clearInterval(intervalId);
+    }
+  }, [activeTab]);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
