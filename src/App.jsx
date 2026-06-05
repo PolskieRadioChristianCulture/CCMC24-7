@@ -12,6 +12,7 @@ function App() {
         </div>
         <nav className="nav-menu">
           <button className="nav-item active">OVERVIEW</button>
+          <button className="nav-item">ECOSYSTEM BASE</button>
           <button className="nav-item">AGENTS</button>
           <button className="nav-item">DEPLOYMENTS</button>
           <button className="nav-item">LOGS</button>
@@ -36,6 +37,60 @@ function App() {
           <div className="metric-card">
             <h3>SYSTEM STATUS</h3>
             <p className="metric-value status-online">ONLINE</p>
+          </div>
+        </section>
+
+        <section className="ecosystem-section">
+          <h2>MISSION BASE: THE ECOSYSTEM</h2>
+          <div className="ecosystem-grid">
+            <div className="eco-card app-card">
+              <h4>Dobrze, że jesteś</h4>
+              <span className="pkg-id">com.christianculture.cudakazdegodnia</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>#ImChristian</h4>
+              <span className="pkg-id">com.aistudio.imchristian.hzpkvq</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Ambient Sleep</h4>
+              <span className="pkg-id">com.aistudio.ambientsleep.yzkcjw</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Biblia #zaDARMO</h4>
+              <span className="pkg-id">com.aistudio.darmowabiblia.vxtpzl</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Biblia Audio Christian Culture</h4>
+              <span className="pkg-id">com.bibliaaudio.cc</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>CC Lite</h4>
+              <span className="pkg-id">com.aistudio.cclight.fkcjxp</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Christian Culture</h4>
+              <span className="pkg-id">pl.cclite.app</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Holistyczny Coaching</h4>
+              <span className="pkg-id">com.cc.holistyczny</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Koncept</h4>
+              <span className="pkg-id">com.aistudio.konceptstudio.hamra</span>
+            </div>
+            <div className="eco-card app-card">
+              <h4>Lumina</h4>
+              <span className="pkg-id">com.lumina.cc</span>
+            </div>
+            <div className="eco-card web-card">
+              <h4>CC Lite (WEB)</h4>
+              <a href="https://www.cclite.pl" target="_blank" rel="noreferrer">www.cclite.pl</a>
+            </div>
+            <div className="eco-card web-card">
+              <h4>Polskie Radio CC (WEB)</h4>
+              <a href="https://www.polskieradio.cc" target="_blank" rel="noreferrer">www.polskieradio.cc</a>
+            </div>
           </div>
         </section>
 

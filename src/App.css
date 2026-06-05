@@ -182,3 +182,64 @@
 .terminal-input::placeholder {
   color: rgba(212, 175, 55, 0.3);
 }
+
+.ecosystem-section {
+  margin-bottom: 3rem;
+}
+
+.ecosystem-section h2 {
+  font-size: 1rem;
+  letter-spacing: 2px;
+  color: #888;
+  margin-bottom: 1.5rem;
+}
+
+.ecosystem-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.eco-card {
+  background-color: #1a1a1a;
+  border-left: 3px solid #d4af37;
+  padding: 1.5rem;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.eco-card:hover {
+  background-color: #222;
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(212, 175, 55, 0.1);
+}
+
+.eco-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: #fff;
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.pkg-id {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+.web-card {
+  border-left-color: #4CAF50;
+}
+
+.web-card a {
+  color: #4CAF50;
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  transition: opacity 0.3s;
+}
+
+.web-card a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
