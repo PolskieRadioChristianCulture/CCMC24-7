@@ -60,17 +60,24 @@ function App() {
             const newLogs = [];
             json.documents.forEach(doc => {
               const data = doc.fields;
+              const docId = doc.name.split('/').pop();
               const timestamp = data.timestamp?.timestampValue || "";
               const sender = data.sender?.stringValue || "user";
               const text = data.command?.stringValue || "";
+              const read = data.read?.booleanValue || false;
               
               if (sender === "joshua" && timestamp > lastTime) {
-                newLogs.push({ type: 'ai', text: `[JOSHUA CC] ${text}` });
-                lastTime = timestamp;
+                newLogs.push({ id: docId, type: 'ai', text: `[JOSHUA CC] ${text}`, read: read, timestamp: timestamp });
               }
             });
             if (newLogs.length > 0) {
-              setTerminalLogs(prev => [...prev, ...newLogs]);
+              // Aktualizuj lastTime do najnowszego
+              lastTime = newLogs.reduce((max, log) => log.timestamp > max ? log.timestamp : max, lastTime);
+              setTerminalLogs(prev => {
+                // Filtruj duplikaty
+                const filtered = newLogs.filter(n => !prev.find(p => p.id === n.id));
+                return [...prev, ...filtered];
+              });
             }
           }
         } catch (e) {
@@ -125,6 +132,23 @@ function App() {
       setTerminalLogs(prev => [...prev, { type: 'system', text: `[WYSŁANO] Oczekuję na Wektor 1...` }]);
     } catch (e) {
       setTerminalLogs(prev => [...prev, { type: 'system', text: `[BŁĄD] Utracono połączenie z satelitą chmurową.` }]);
+    }
+  };
+
+  const markAsRead = async (logId) => {
+    try {
+      await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue/${logId}?updateMask.fieldPaths=read`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fields: {
+            read: { booleanValue: true }
+          }
+        })
+      });
+      setTerminalLogs(prev => prev.map(log => log.id === logId ? { ...log, read: true } : log));
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -207,7 +231,23 @@ function App() {
                 </div>
                 <div className="terminal-body">
                   {terminalLogs.map((log, idx) => (
-                    <div key={idx} className={`log-entry ${log.type}`}>{log.text}</div>
+                    <div key={idx} className={`log-entry ${log.type}`}>
+                      {log.text}
+                      {log.type === 'ai' && log.id && !log.read && (
+                        <button 
+                          onClick={() => markAsRead(log.id)}
+                          style={{
+                            marginLeft: '15px', background: '#D4AF37', color: '#000', 
+                            border: 'none', borderRadius: '3px', padding: '2px 8px', 
+                            fontSize: '10px', fontWeight: 'bold', cursor: 'pointer'
+                          }}>
+                          POTWIERDŹ ODBIÓR
+                        </button>
+                      )}
+                      {log.type === 'ai' && log.read && (
+                        <span style={{ marginLeft: '15px', color: '#4CAF50', fontSize: '10px' }}>✓ ODDZIAŁ GOTOWY</span>
+                      )}
+                    </div>
                   ))}
                 </div>
                 <div className="terminal-input-wrapper">
