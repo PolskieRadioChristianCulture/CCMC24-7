@@ -37,6 +37,39 @@ function App() {
 
   const [suggestionIndex, setSuggestionIndex] = useState(0);
 
+  const [terminalInput, setTerminalInput] = useState("");
+  const [terminalLogs, setTerminalLogs] = useState([
+    { type: 'system', text: '[SYSTEM] Bezpieczne połączenie nawiązane.' },
+    { type: 'system', text: '[SYSTEM] Płótno operacyjne załadowane.' },
+    { type: 'ai', text: '[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.' }
+  ]);
+
+  const handleTerminalSubmit = async () => {
+    if (!terminalInput.trim()) return;
+    
+    const cmd = terminalInput.trim();
+    setTerminalLogs(prev => [...prev, { type: 'user', text: `root@mission-control:~# ${cmd}` }]);
+    setTerminalInput("");
+
+    // Wysyłka komendy przez REST API do darmowej bazy Firestore Dowódcy
+    try {
+      await fetch('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fields: {
+            command: { stringValue: cmd },
+            status: { stringValue: 'pending' },
+            timestamp: { timestampValue: new Date().toISOString() }
+          }
+        })
+      });
+      setTerminalLogs(prev => [...prev, { type: 'system', text: `[WYSŁANO] Oczekuję na Wektor 1...` }]);
+    } catch (e) {
+      setTerminalLogs(prev => [...prev, { type: 'system', text: `[BŁĄD] Utracono połączenie z satelitą chmurową.` }]);
+    }
+  };
+
   useEffect(() => {
     if (activeTab === 'CANVAS') {
       const interval = setInterval(() => {
@@ -115,14 +148,21 @@ function App() {
                   <span className="status-pulse">● ONLINE</span>
                 </div>
                 <div className="terminal-body">
-                  <div className="log-entry system">[SYSTEM] Bezpieczne połączenie nawiązane.</div>
-                  <div className="log-entry system">[SYSTEM] Płótno operacyjne załadowane.</div>
-                  <div className="log-entry ai">[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.</div>
+                  {terminalLogs.map((log, idx) => (
+                    <div key={idx} className={`log-entry ${log.type}`}>{log.text}</div>
+                  ))}
                 </div>
                 <div className="terminal-input-wrapper">
                   <span className="prompt-symbol">root@mission-control:~#</span>
-                  <input type="text" className="terminal-input" placeholder="Wpisz rozkaz (np. /ping, deploy, skan)..." />
-                  <button className="terminal-send-btn">WYŚLIJ</button>
+                  <input 
+                    type="text" 
+                    className="terminal-input" 
+                    placeholder="Wpisz rozkaz (np. /ping, deploy, skan)..."
+                    value={terminalInput}
+                    onChange={(e) => setTerminalInput(e.target.value)}
+                    onKeyDown={(e) => e.key === 'Enter' && handleTerminalSubmit()}
+                  />
+                  <button className="terminal-send-btn" onClick={handleTerminalSubmit}>WYŚLIJ</button>
                 </div>
               </div>
               
