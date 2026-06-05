@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './App.css';
+import logo from '../public/logo.jpg';
 
 function App() {
   const [status, setStatus] = useState("AWAITING_COMMANDS");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [tokenInput, setTokenInput] = useState("");
   const [error, setError] = useState(false);
+  const [activeTab, setActiveTab] = useState("CANVAS");
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ function App() {
     return (
       <div className="login-container">
         <div className="login-box">
-          <img src="/logo.jpg" alt="Mission Control" className="login-logo" />
+          <img src={logo} alt="Mission Control" className="login-logo" />
           <h2>RESTRICTED AREA</h2>
           <p>ENTER ENCRYPTED TOKEN</p>
           <form onSubmit={handleLogin}>
@@ -48,14 +50,15 @@ function App() {
     <div className="dashboard-container">
       <aside className="sidebar">
         <div className="logo-container">
-          <img src="/logo.jpg" alt="Mission Control" className="logo" />
+          <img src={logo} alt="Mission Control" className="logo" />
         </div>
         <nav className="nav-menu">
-          <button className="nav-item active">OVERVIEW</button>
-          <button className="nav-item">ECOSYSTEM BASE</button>
-          <button className="nav-item">AGENTS</button>
-          <button className="nav-item">DEPLOYMENTS</button>
-          <button className="nav-item">LOGS</button>
+          <button className={`nav-item ${activeTab === 'CANVAS' ? 'active' : ''}`} onClick={() => setActiveTab('CANVAS')}>CANVAS</button>
+          <button className={`nav-item ${activeTab === 'OVERVIEW' ? 'active' : ''}`} onClick={() => setActiveTab('OVERVIEW')}>OVERVIEW</button>
+          <button className={`nav-item ${activeTab === 'ECOSYSTEM' ? 'active' : ''}`} onClick={() => setActiveTab('ECOSYSTEM')}>ECOSYSTEM BASE</button>
+          <button className={`nav-item ${activeTab === 'AGENTS' ? 'active' : ''}`} onClick={() => setActiveTab('AGENTS')}>AGENTS</button>
+          <button className={`nav-item ${activeTab === 'DEPLOYMENTS' ? 'active' : ''}`} onClick={() => setActiveTab('DEPLOYMENTS')}>DEPLOYMENTS</button>
+          <button className={`nav-item ${activeTab === 'LOGS' ? 'active' : ''}`} onClick={() => setActiveTab('LOGS')}>LOGS</button>
         </nav>
       </aside>
 
@@ -65,87 +68,101 @@ function App() {
           <span className="status-badge">SECURE CONNECTION</span>
         </header>
 
-        <section className="metrics-grid">
-          <div className="metric-card">
-            <h3>ACTIVE AGENTS</h3>
-            <p className="metric-value">15</p>
-          </div>
-          <div className="metric-card">
-            <h3>TASKS IN QUEUE</h3>
-            <p className="metric-value">3</p>
-          </div>
-          <div className="metric-card">
-            <h3>SYSTEM STATUS</h3>
-            <p className="metric-value status-online">ONLINE</p>
-          </div>
-        </section>
+        {activeTab === 'CANVAS' && (
+          <section className="canvas-section">
+            <h2>STRATEGIC CANVAS</h2>
+            <div className="canvas-placeholder">
+              <p>Trwa inicjowanie głównego płótna operacyjnego...</p>
+            </div>
+          </section>
+        )}
 
-        <section className="ecosystem-section">
-          <h2>MISSION BASE: THE ECOSYSTEM</h2>
-          <div className="ecosystem-grid">
-            <div className="eco-card app-card">
-              <h4>Dobrze, że jesteś</h4>
-              <span className="pkg-id">com.christianculture.cudakazdegodnia</span>
+        {activeTab === 'OVERVIEW' && (
+          <section className="overview-section">
+            <div className="metrics-grid">
+              <div className="metric-card">
+                <h3>ACTIVE AGENTS</h3>
+                <p className="metric-value">15</p>
+              </div>
+              <div className="metric-card">
+                <h3>TASKS IN QUEUE</h3>
+                <p className="metric-value">3</p>
+              </div>
+              <div className="metric-card">
+                <h3>SYSTEM STATUS</h3>
+                <p className="metric-value status-online">ONLINE</p>
+              </div>
             </div>
-            <div className="eco-card app-card">
-              <h4>#ImChristian</h4>
-              <span className="pkg-id">com.aistudio.imchristian.hzpkvq</span>
+            <div className="terminal-section">
+              <h2>TERMINAL / COMMAND CENTER</h2>
+              <div className="terminal-window">
+                <p className="terminal-line">[SYSTEM] Welcome to Mission Control.</p>
+                <p className="terminal-line">[SYSTEM] Authentication successful. Access level: COMMANDER.</p>
+                <p className="terminal-line">[AI] Awaiting your orders...</p>
+                <div className="terminal-input-row">
+                  <span>&gt;</span>
+                  <input type="text" className="terminal-input" placeholder="Enter command..." />
+                </div>
+              </div>
             </div>
-            <div className="eco-card app-card">
-              <h4>Ambient Sleep</h4>
-              <span className="pkg-id">com.aistudio.ambientsleep.yzkcjw</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Biblia #zaDARMO</h4>
-              <span className="pkg-id">com.aistudio.darmowabiblia.vxtpzl</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Biblia Audio Christian Culture</h4>
-              <span className="pkg-id">com.bibliaaudio.cc</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>CC Lite</h4>
-              <span className="pkg-id">com.aistudio.cclight.fkcjxp</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Christian Culture</h4>
-              <span className="pkg-id">pl.cclite.app</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Holistyczny Coaching</h4>
-              <span className="pkg-id">com.cc.holistyczny</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Koncept</h4>
-              <span className="pkg-id">com.aistudio.konceptstudio.hamra</span>
-            </div>
-            <div className="eco-card app-card">
-              <h4>Lumina</h4>
-              <span className="pkg-id">com.lumina.cc</span>
-            </div>
-            <div className="eco-card web-card">
-              <h4>CC Lite (WEB)</h4>
-              <a href="https://www.cclite.pl" target="_blank" rel="noreferrer">www.cclite.pl</a>
-            </div>
-            <div className="eco-card web-card">
-              <h4>Polskie Radio CC (WEB)</h4>
-              <a href="https://www.polskieradio.cc" target="_blank" rel="noreferrer">www.polskieradio.cc</a>
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        <section className="terminal-section">
-          <h2>TERMINAL / COMMAND CENTER</h2>
-          <div className="terminal-window">
-            <p className="terminal-line">[SYSTEM] Welcome to Mission Control.</p>
-            <p className="terminal-line">[SYSTEM] Authentication successful. Access level: COMMANDER.</p>
-            <p className="terminal-line">[AI] Awaiting your orders...</p>
-            <div className="terminal-input-row">
-              <span>&gt;</span>
-              <input type="text" className="terminal-input" placeholder="Enter command..." />
+        {activeTab === 'ECOSYSTEM' && (
+          <section className="ecosystem-section">
+            <h2>MISSION BASE: THE ECOSYSTEM</h2>
+            <div className="ecosystem-grid">
+              <div className="eco-card app-card">
+                <h4>Dobrze, że jesteś</h4>
+                <span className="pkg-id">com.christianculture.cudakazdegodnia</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>#ImChristian</h4>
+                <span className="pkg-id">com.aistudio.imchristian.hzpkvq</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Ambient Sleep</h4>
+                <span className="pkg-id">com.aistudio.ambientsleep.yzkcjw</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Biblia #zaDARMO</h4>
+                <span className="pkg-id">com.aistudio.darmowabiblia.vxtpzl</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Biblia Audio Christian Culture</h4>
+                <span className="pkg-id">com.bibliaaudio.cc</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>CC Lite</h4>
+                <span className="pkg-id">com.aistudio.cclight.fkcjxp</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Christian Culture</h4>
+                <span className="pkg-id">pl.cclite.app</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Holistyczny Coaching</h4>
+                <span className="pkg-id">com.cc.holistyczny</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Koncept</h4>
+                <span className="pkg-id">com.aistudio.konceptstudio.hamra</span>
+              </div>
+              <div className="eco-card app-card">
+                <h4>Lumina</h4>
+                <span className="pkg-id">com.lumina.cc</span>
+              </div>
+              <div className="eco-card web-card">
+                <h4>CC Lite (WEB)</h4>
+                <a href="https://www.cclite.pl" target="_blank" rel="noreferrer">www.cclite.pl</a>
+              </div>
+              <div className="eco-card web-card">
+                <h4>Polskie Radio CC (WEB)</h4>
+                <a href="https://www.polskieradio.cc" target="_blank" rel="noreferrer">www.polskieradio.cc</a>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
     </div>
   );
