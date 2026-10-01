@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import logo from '../public/logo.jpg';
+import { writeCommand } from './command-queue.mjs';
 
 const AI_SUGGESTIONS = [
   "Sugestia AI: Połącz projekt #ImChristian z platformą Holistyczny Coaching by zwiększyć retencję o 14%.",
@@ -40,9 +41,10 @@ function App() {
   const [terminalInput, setTerminalInput] = useState("");
   const [attachmentData, setAttachmentData] = useState(null);
   const [attachmentName, setAttachmentName] = useState("");
+  const [isSending, setIsSending] = useState(false);
 
   const [terminalLogs, setTerminalLogs] = useState([
-    { type: 'system', text: '[SYSTEM] Bezpieczne połączenie nawiązane.' },
+    { type: 'system', text: '[SYSTEM] Panel uruchomiony. Dostępność wykonawcy wymaga sprawdzenia.' },
     { type: 'system', text: '[SYSTEM] Płótno operacyjne załadowane.' },
     { type: 'ai', text: '[JOSHUA CC] Oczekuję na dyspozycje, Dowódco.' }
   ]);
@@ -102,11 +104,11 @@ function App() {
   };
 
   const handleTerminalSubmit = async () => {
-    if (!terminalInput.trim()) return;
+    if (!terminalInput.trim() || isSending) return;
     
     const cmd = terminalInput.trim();
     setTerminalLogs(prev => [...prev, { type: 'user', text: `root@mission-control:~# ${cmd}` }]);
-    setTerminalInput("");
+    setIsSending(true);
 
     // Wysyłka komendy przez REST API do darmowej bazy Firestore Dowódcy
     try {
@@ -120,24 +122,23 @@ function App() {
         payloadFields.attachment_base64 = { stringValue: attachmentData };
         payloadFields.attachment_name = { stringValue: attachmentName };
         setTerminalLogs(prev => [...prev, { type: 'system', text: `[ZAŁĄCZNIK] Dołączono plik: ${attachmentName}` }]);
-        setAttachmentData(null);
-        setAttachmentName("");
       }
 
-      await fetch('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue?key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fields: payloadFields })
-      });
-      setTerminalLogs(prev => [...prev, { type: 'system', text: `[WYSŁANO] Oczekuję na Wektor 1...` }]);
+      const saved = await writeCommand('https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue?key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4', payloadFields);
+      setTerminalInput("");
+      setAttachmentData(null);
+      setAttachmentName("");
+      setTerminalLogs(prev => [...prev, { type: 'system', text: `[ZAPISANO W KOLEJCE] ID: ${saved.id}. Wykonanie nie jest jeszcze potwierdzone.` }]);
     } catch (e) {
-      setTerminalLogs(prev => [...prev, { type: 'system', text: `[BŁĄD] Utracono połączenie z satelitą chmurową.` }]);
+      setTerminalLogs(prev => [...prev, { type: 'system', text: `[BŁĄD] Nie potwierdzono zapisu. Treść i załącznik pozostają do ponowienia. Przy błędzie sieci sprawdź kolejkę przed ponowną wysyłką.` }]);
+    } finally {
+      setIsSending(false);
     }
   };
 
   const markAsRead = async (logId) => {
     try {
-      await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue/${logId}?updateMask.fieldPaths=read&key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4`, {
+      const response = await fetch(`https://firestore.googleapis.com/v1/projects/cc-mission-control/databases/(default)/documents/CommandQueue/${logId}?updateMask.fieldPaths=read&key=AIzaSyDou1gYyuJnuF2WocXEqglfRPqqwMm0Ge4`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -146,6 +147,7 @@ function App() {
           }
         })
       });
+      if (!response.ok) throw new Error(`READ_RECEIPT_REJECTED_${response.status}`);
       setTerminalLogs(prev => prev.map(log => log.id === logId ? { ...log, read: true } : log));
     } catch (e) {
       console.error(e);
@@ -217,7 +219,7 @@ function App() {
       <main className="main-content">
         <header className="top-bar">
           <h1>CHRISTIAN CULTURE 24/7</h1>
-          <span className="status-badge">SECURE CONNECTION</span>
+          <span className="status-badge">WYKONAWCA: NIEZWERYFIKOWANY</span>
         </header>
 
         {activeTab === 'CANVAS' && (
@@ -227,7 +229,7 @@ function App() {
               <div className="communicator-terminal">
                 <div className="terminal-header">
                   <span>TERMINAL DOWODZENIA (KOMUNIKATOR)</span>
-                  <span className="status-pulse">● ONLINE</span>
+                  <span>STATUS WYKONAWCY NIEZNANY</span>
                 </div>
                 <div className="terminal-body">
                   {terminalLogs.map((log, idx) => (
@@ -245,7 +247,7 @@ function App() {
                         </button>
                       )}
                       {log.type === 'ai' && log.read && (
-                        <span style={{ marginLeft: '15px', color: '#4CAF50', fontSize: '10px' }}>✓ ODDZIAŁ GOTOWY</span>
+                        <span style={{ marginLeft: '15px', color: '#4CAF50', fontSize: '10px' }}>✓ ODCZYTANO WIADOMOŚĆ</span>
                       )}
                     </div>
                   ))}
@@ -253,20 +255,21 @@ function App() {
                 <div className="terminal-input-wrapper">
                   <span className="prompt-symbol">root@mission-control:~#</span>
                   
-                  <input type="file" id="file-upload" style={{display: 'none'}} onChange={handleFileChange} />
+                  <input type="file" id="file-upload" disabled={isSending} style={{display: 'none'}} onChange={handleFileChange} />
                   <label htmlFor="file-upload" className="attachment-btn" title="Dodaj plik" style={{cursor: 'pointer', marginRight: '10px', fontSize: '18px'}}>
                     📎
                   </label>
 
                   <input 
                     type="text" 
+                    disabled={isSending}
                     className="terminal-input" 
                     placeholder={attachmentName ? `Wpisz komendę dla pliku ${attachmentName}...` : "Wpisz rozkaz (np. /ping, deploy, skan)..."}
                     value={terminalInput}
                     onChange={(e) => setTerminalInput(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleTerminalSubmit()}
                   />
-                  <button className="terminal-send-btn" onClick={handleTerminalSubmit}>WYŚLIJ</button>
+                  <button className="terminal-send-btn" disabled={isSending} onClick={handleTerminalSubmit}>{isSending ? 'ZAPISYWANIE…' : 'WYŚLIJ'}</button>
                 </div>
               </div>
               
@@ -274,7 +277,7 @@ function App() {
                 <div className="ai-suggestion-bubble">
                   <div className="ai-bubble-header">
                     <span className="ai-icon">✨</span>
-                    <strong>JOSHUA CC</strong>
+                    <strong>PRZYKŁADOWE SUGESTIE — DEMO</strong>
                     <button className="close-bubble-btn" onClick={() => setShowJoshuaBubble(false)}>✕</button>
                   </div>
                   <p>{AI_SUGGESTIONS[suggestionIndex]}</p>
@@ -298,16 +301,16 @@ function App() {
           <section className="overview-section">
             <div className="metrics-grid">
               <div className="metric-card">
-                <h3>ACTIVE AGENTS</h3>
+                <h3>ROLE DORADCZE — KATALOG</h3>
                 <p className="metric-value">15</p>
               </div>
               <div className="metric-card">
-                <h3>TASKS IN QUEUE</h3>
-                <p className="metric-value">3</p>
+                <h3>ZADANIA W KOLEJCE</h3>
+                <p className="metric-value metric-message">NIEZWERYFIKOWANE</p>
               </div>
               <div className="metric-card">
                 <h3>SYSTEM STATUS</h3>
-                <p className="metric-value status-online">ONLINE</p>
+                <p className="metric-value metric-message">NIEZWERYFIKOWANY</p>
               </div>
             </div>
             <div className="terminal-section">
