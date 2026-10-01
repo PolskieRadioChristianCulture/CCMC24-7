@@ -72,6 +72,8 @@
 
 .top-bar {
   display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 3rem;
@@ -128,6 +130,12 @@
   font-size: 3rem;
   margin: 1rem 0 0 0;
   font-weight: 300;
+}
+
+.metric-message {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
 }
 
 .status-online {
