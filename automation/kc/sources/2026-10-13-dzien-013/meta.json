@@ -1,0 +1,38 @@
+{
+  "courseId": "z-biblia-za-pan-brat",
+  "lessonGlobalNumber": 13,
+  "publicationDate": "2026-10-13",
+  "dayOfWeek": "wtorek",
+  "title": "Czy jest coś zbyt trudnego dla Pana?",
+  "subtitle": "Bóg dotrzymuje obietnic, a Abraham wstawia się za grzesznikami",
+  "scriptureRange": "Rdz 18:1–33",
+  "memoryVerse": {
+    "reference": "Rdz 18:14",
+    "translation": "UBG",
+    "text": "Czy jest coś zbyt trudnego dla PANA?"
+  },
+  "image": "/images/academy/daily/kc_day_13_mamre_goscie.jpg",
+  "lessonUrl": "https://polskieradio.cc/akademia/kurscodzienny/dzien-13",
+  "author": {
+    "name": "Cezary Rogowski",
+    "slug": "cezaryrgowski"
+  },
+  "rightsDeclaration": {
+    "source": "OWNER_AUTHORED",
+    "owner": "Cezary Rogowski / Christian Culture",
+    "bibleTranslation": "UBG",
+    "accepted": false,
+    "note": "Deklarację praw potwierdza właściciel przy zatwierdzeniu lekcji. Bez accepted=true lekcja nie może przejść do statusu APPROVED."
+  },
+  "provenance": {
+    "preparedBy": "Antigravity",
+    "preparedAt": "2026-10-12T11:07:33.844Z",
+    "sourceFiles": [
+      "Wektor1_VideoFactory/tts_day13.txt",
+      "Wektor1_VideoFactory/web_day13.txt",
+      "Wektor1_VideoFactory/sms_day13.txt"
+    ],
+    "integratedBy": "Antigravity (Zero-QA)",
+    "integratedAt": "2026-10-12"
+  }
+}
