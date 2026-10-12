@@ -1,0 +1,54 @@
+name: CC ZERO COST environment test
+on:
+  push:
+    branches: [test/cc-actions-zero-cost]
+    paths: [.github/workflows/cc-zero-cost-test.yml]
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: cc-zero-cost-test
+  cancel-in-progress: true
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Validate sample and prepare publication package (no AI API)
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import hashlib, json, os, html
+          def prepare(source):
+              for key in ("title", "text", "rights"):
+                  if not isinstance(source.get(key), str) or not source[key].strip():
+                      raise ValueError("Missing required field: " + key)
+              if source["rights"] != "owned":
+                  raise ValueError("Rights must be verified before proceeding")
+              return {
+                  "id": hashlib.sha256(json.dumps(source, sort_keys=True, ensure_ascii=False).encode()).hexdigest(),
+                  "title": source["title"].strip(),
+                  "description": source["text"].strip() + "\n\nChristian Culture | polskieradio.cc",
+                  "tags": ["Christian Culture", "Biblia"],
+                  "status": "REQUIRES_REVIEW",
+                  "mode": "DETERMINISTIC_ENVIRONMENT_TEST",
+              }
+          sample = {"title": "Test Christian Culture", "text": "Przykładowy materiał testowy.", "rights": "owned"}
+          package = prepare(sample)
+          assert package == prepare(sample), "Package must be deterministic"
+          assert package["status"] == "REQUIRES_REVIEW", "No automatic publication"
+          for invalid in ({}, dict(sample, rights="unknown"), dict(sample, text="")):
+              try:
+                  prepare(invalid)
+              except ValueError:
+                  pass
+              else:
+                  raise AssertionError("Invalid source was accepted")
+          serialized = json.dumps(package, ensure_ascii=False, indent=2)
+          assert json.loads(serialized) == package
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a", encoding="utf-8") as report:
+              report.write("# CC environment test — PASS\n\n")
+              report.write("Sample validation, rights gate, deterministic ID and JSON round-trip passed.\n\n")
+              report.write("No AI API, no secrets, no publication, no artifact/cache uploads.\n\n")
+              report.write("<pre>" + html.escape(serialized) + "</pre>\n")
+          print("PASS: environment and package validation")
+          PY
