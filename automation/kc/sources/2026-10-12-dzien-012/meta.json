@@ -1,0 +1,38 @@
+{
+  "courseId": "z-biblia-za-pan-brat",
+  "lessonGlobalNumber": 12,
+  "publicationDate": "2026-10-12",
+  "dayOfWeek": "poniedziałek",
+  "title": "Gdy człowiek próbuje pomóc Bogu",
+  "subtitle": "Hagar, Ismael i Abraham — obietnica, cierpliwość i Bóg, który widzi",
+  "scriptureRange": "Rdz 16:1–17:27",
+  "memoryVerse": {
+    "reference": "Rdz 17:1",
+    "translation": "UBG",
+    "text": "Ja jestem Bogiem Wszechmogącym. Chodź przede Mną i bądź nienaganny."
+  },
+  "image": "/images/academy/daily/kc_day_12_hagar_pustynia.jpg",
+  "lessonUrl": "https://polskieradio.cc/akademia/kurscodzienny/dzien-12",
+  "author": {
+    "name": "Cezary Rogowski",
+    "slug": "cezaryrgowski"
+  },
+  "rightsDeclaration": {
+    "source": "OWNER_AUTHORED",
+    "owner": "Cezary Rogowski / Christian Culture",
+    "bibleTranslation": "UBG",
+    "accepted": false,
+    "note": "Deklarację praw potwierdza właściciel przy zatwierdzeniu lekcji. Bez accepted=true lekcja nie może przejść do statusu APPROVED."
+  },
+  "provenance": {
+    "preparedBy": "Antigravity",
+    "preparedAt": "2026-10-11T21:35:00+02:00",
+    "sourceFiles": [
+      "Wektor1_VideoFactory/tts_day12.txt",
+      "Wektor1_VideoFactory/web_day12.txt",
+      "Wektor1_VideoFactory/sms_day12.txt"
+    ],
+    "integratedBy": "Claude (Cowork)",
+    "integratedAt": "2026-10-12"
+  }
+}

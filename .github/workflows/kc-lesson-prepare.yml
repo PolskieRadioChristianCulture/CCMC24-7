@@ -1,0 +1,59 @@
+# Kurs Codzienny „Z Biblią za Pan Brat” — przygotowanie lekcji do zatwierdzenia (etap 1 z P0).
+# Zero kosztów: standardowy runner GitHub, bez sekretów, bez modeli AI, bez zapisu do Firestore/LUMINA.
+# Bez harmonogramu (cron) — godzina publikacji nie została jeszcze ustalona przez właściciela.
+name: KC — przygotowanie lekcji (PENDING_APPROVAL)
+
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: 'Katalog źródeł lekcji (np. automation/kc/sources/2026-10-12-dzien-012)'
+        required: true
+        default: 'automation/kc/sources/2026-10-12-dzien-012'
+  push:
+    paths:
+      - 'automation/kc/**'
+      - '.github/workflows/kc-lesson-prepare.yml'
+  pull_request:
+    paths:
+      - 'automation/kc/**'
+      - '.github/workflows/kc-lesson-prepare.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kc-lesson-prepare-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      KC_SOURCE: ${{ github.event.inputs.source || 'automation/kc/sources/2026-10-12-dzien-012' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Testy modułu KC
+        run: node --test automation/kc/test/*.test.mjs
+
+      - name: Zgodność rekordu w kolejce ze źródłami (bez zapisu)
+        run: |
+          page="$KC_SOURCE/lesson-page.snapshot.html"
+          extra=""
+          if [ -f "$page" ]; then extra="--page $page"; fi
+          node automation/kc/prepare-lesson.mjs --source "$KC_SOURCE" $extra --check --report kc-report.json
+
+      - name: Raport
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: kc-lesson-report
+          path: kc-report.json
+          if-no-files-found: warn
+          retention-days: 30
