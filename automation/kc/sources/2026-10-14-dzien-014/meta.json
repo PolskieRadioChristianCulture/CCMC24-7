@@ -1,0 +1,38 @@
+{
+  "courseId": "z-biblia-za-pan-brat",
+  "lessonGlobalNumber": 14,
+  "publicationDate": "2026-10-14",
+  "dayOfWeek": "środa",
+  "title": "Sodoma: Łaska, sąd i ratunek",
+  "subtitle": "Gdy Bóg wyprowadza człowieka z miejsca zagłady",
+  "scriptureRange": "Rdz 19:1–38",
+  "memoryVerse": {
+    "reference": "Rdz 19:16",
+    "translation": "UBG",
+    "text": "Lecz gdy zwlekał, mężowie chwycili go za rękę, a także jego żonę i obie córki, gdyż PAN chciał go oszczędzić."
+  },
+  "image": "/images/academy/daily/kc_day_14_sodoma_lot.jpg",
+  "lessonUrl": "https://polskieradio.cc/akademia/kurscodzienny/dzien-14",
+  "author": {
+    "name": "Cezary Rogowski",
+    "slug": "cezaryrgowski"
+  },
+  "rightsDeclaration": {
+    "source": "OWNER_AUTHORED",
+    "owner": "Cezary Rogowski / Christian Culture",
+    "bibleTranslation": "UBG",
+    "accepted": false,
+    "note": "Deklarację praw potwierdza właściciel przy zatwierdzeniu lekcji. Bez accepted=true lekcja nie może przejść do statusu APPROVED."
+  },
+  "provenance": {
+    "preparedBy": "Antigravity",
+    "preparedAt": "2026-10-13T04:56:00.000Z",
+    "sourceFiles": [
+      "Wektor1_VideoFactory/tts_day14.txt",
+      "Wektor1_VideoFactory/web_day14.txt",
+      "Wektor1_VideoFactory/sms_day14.txt"
+    ],
+    "integratedBy": "Antigravity (Zero-QA)",
+    "integratedAt": "2026-10-13"
+  }
+}
