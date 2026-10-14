@@ -1,0 +1,38 @@
+{
+  "courseId": "z-biblia-za-pan-brat",
+  "lessonGlobalNumber": 15,
+  "publicationDate": "2026-10-15",
+  "dayOfWeek": "czwartek",
+  "title": "Bóg dotrzymuje obietnicy",
+  "subtitle": "Gdy ludzkie możliwości się kończą, Boża wierność pozostaje",
+  "scriptureRange": "Rdz 20:1–21:34",
+  "memoryVerse": {
+    "reference": "Rdz 21:1",
+    "translation": "UBG",
+    "text": "A PAN nawiedził Sarę, jak powiedział, i PAN uczynił Sarze, jak obiecał."
+  },
+  "image": "/images/academy/daily/kc_day_15_isaac_obietnica.jpg",
+  "lessonUrl": "https://polskieradio.cc/akademia/kurscodzienny/dzien-15",
+  "author": {
+    "name": "Cezary Rogowski",
+    "slug": "cezaryrgowski"
+  },
+  "rightsDeclaration": {
+    "source": "OWNER_AUTHORED",
+    "owner": "Cezary Rogowski / Christian Culture",
+    "bibleTranslation": "UBG",
+    "accepted": false,
+    "note": "Deklarację praw potwierdza właściciel przy zatwierdzeniu lekcji. Bez accepted=true lekcja nie może przejść do statusu APPROVED."
+  },
+  "provenance": {
+    "preparedBy": "Antigravity",
+    "preparedAt": "2026-10-14T13:54:08.478Z",
+    "sourceFiles": [
+      "Wektor1_VideoFactory/tts_day15.txt",
+      "Wektor1_VideoFactory/web_day15.txt",
+      "Wektor1_VideoFactory/sms_day15.txt"
+    ],
+    "integratedBy": "Antigravity (Zero-QA)",
+    "integratedAt": "2026-10-14"
+  }
+}
